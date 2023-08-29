@@ -15,6 +15,10 @@ const Add = () => {
   const webcamRef = useRef(null);
   let i = 0;
 
+  const videoConstraints = {
+    facingMode: { exact: "environment" },
+  };
+
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrcArray([...imgSrcArray, imageSrc]);
@@ -313,7 +317,12 @@ const Add = () => {
         </button>
       </form>
       <div>
-        <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          videoConstraints={videoConstraints}
+          screenshotFormat="image/jpeg"
+        />
         <button onClick={capture}>Capture photo</button>
         {imgSrcArray && imgSrcArray.map((img) => <img src={img} alt="" />)}
       </div>
