@@ -11,10 +11,7 @@ const Clientcard = ({ card, par, id }) => {
           {card.name}
         </h5>
         <p className="font-normal text-gray-700 dark:text-gray-400">
-          From: {card.from}
-        </p>
-        <p className="font-normal text-gray-700 dark:text-gray-400">
-          To: {card.to}
+          Date: {card.date}
         </p>
       </Link>
     </>

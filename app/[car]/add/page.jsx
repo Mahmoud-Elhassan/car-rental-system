@@ -3,14 +3,23 @@ import { db, storage } from "@/app/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Webcam from "react-webcam";
 
 const Add = () => {
   const params = useParams();
   const router = useRouter();
 
   const [imageArray, setImageArray] = useState([]);
+  const [imgSrcArray, setImgSrcArray] = useState([]);
+  const webcamRef = useRef(null);
   let i = 0;
+
+  const capture = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setImgSrcArray([...imgSrcArray, imageSrc]);
+    console.log(imgSrcArray);
+  };
 
   const formHandler = async (e) => {
     e.preventDefault();
@@ -18,8 +27,7 @@ const Add = () => {
 
     await addDoc(collection(db, params.car), {
       name: e.target[0].value,
-      from: e.target[1].value,
-      to: e.target[2].value,
+      date: new Date().toLocaleString(),
     });
     // Array.from(e.target[3].files).forEach(async (file) => {
     //   const storageRef = ref(storage, `${params.car}/` + uuidv4());
@@ -57,35 +65,7 @@ const Add = () => {
             required
           />
         </div>
-        <div>
-          <label
-            htmlFor="from"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            From:
-          </label>
-          <input
-            type="date"
-            id="from"
-            className="bg-gray-50 border mb-10 border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="to"
-            className="block mb-2 text-sm font-medium text-gray-900 "
-          >
-            To:
-          </label>
-          <input
-            type="date"
-            id="to"
-            className="bg-gray-50 border mb-10 border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-            required
-          />
-        </div>
-        <div>
+        {/* <div>
           <label
             htmlFor="images-1"
             className="block mb-2 text-sm font-medium text-gray-900 "
@@ -324,7 +304,7 @@ const Add = () => {
             onChange={(e) => setImageArray([...imageArray, e.target.files[0]])}
             required
           />
-        </div>
+        </div> */}
         <button
           type="submit"
           className="text-white bg-blue-700 my-12 hover:bg-blue-800 focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
@@ -332,6 +312,11 @@ const Add = () => {
           Submit
         </button>
       </form>
+      <div>
+        <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+        <button onClick={capture}>Capture photo</button>
+        {imgSrcArray && imgSrcArray.map((img) => <img src={img} alt="" />)}
+      </div>
     </main>
   );
 };
