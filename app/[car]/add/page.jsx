@@ -5,6 +5,7 @@ import { ref, uploadBytes } from "firebase/storage";
 import { useParams, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import Webcam from "react-webcam";
+import { v4 } from "uuid";
 
 const Add = () => {
   const params = useParams();
@@ -32,6 +33,7 @@ const Add = () => {
     await addDoc(collection(db, params.car), {
       name: e.target[0].value,
       date: new Date().toLocaleString(),
+      imagesArray: imgSrcArray,
     });
     // Array.from(e.target[3].files).forEach(async (file) => {
     //   const storageRef = ref(storage, `${params.car}/` + uuidv4());
@@ -50,22 +52,22 @@ const Add = () => {
   };
 
   return (
-    <main className=" flex justify-center w-screen overflow-x-hidden">
+    <main className=" flex flex-col items-center w-screen overflow-x-hidden">
       <form
-        className="flex flex-col py-20 justify-evenly w-11/12 lg:w-9/12"
+        className="flex flex-col py-16 w-10/12 lg:w-9/12"
         onSubmit={formHandler}
       >
         <div>
           <label
             htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900 "
+            className="block  text-sm font-medium text-gray-900 "
           >
             Client Name
           </label>
           <input
             type="text"
             id="name"
-            className="bg-gray-50 border mb-10 border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+            className="bg-gray-50 border  border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
             required
           />
         </div>
@@ -311,20 +313,29 @@ const Add = () => {
         </div> */}
         <button
           type="submit"
-          className="text-white bg-blue-700 my-12 hover:bg-blue-800 focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+          className="text-white bg-blue-700 my-12 hover:bg-blue-800 focus:outline-none  font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
         >
           Submit
         </button>
       </form>
-      <div>
+      <div className=" flex flex-col items-center w-10/12 lg:w-9/12">
         <Webcam
           audio={false}
           ref={webcamRef}
           videoConstraints={videoConstraints}
           screenshotFormat="image/jpeg"
+          className="w-full"
         />
-        <button onClick={capture}>Capture photo</button>
-        {imgSrcArray && imgSrcArray.map((img) => <img src={img} alt="" />)}
+        <button
+          className="text-white bg-blue-700 my-12 hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700"
+          onClick={capture}
+        >
+          Capture photo
+        </button>
+        {imgSrcArray &&
+          imgSrcArray.map((img) => (
+            <img className="w-full my-5" key={v4()} src={img} alt="" />
+          ))}
       </div>
     </main>
   );

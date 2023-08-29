@@ -25,35 +25,37 @@ const Carhistory = () => {
 
     if (docSnap.exists()) {
       setCarData(docSnap.data());
-      await Promise.all(
-        carImagesNs.map((e) => {
-          getDownloadURL(ref(storage, `${params.car}/${e}`)).then((e) => {
-            setCarImages((oldArray) => [...oldArray, e]);
-          });
-        })
-      );
+      // await Promise.all(
+      //   carImagesNs.map((e) => {
+      //     getDownloadURL(ref(storage, `${params.car}/${e}`)).then((e) => {
+      //       setCarImages((oldArray) => [...oldArray, e]);
+      //     });
+      //   })
+      // );
     } else {
       console.log("Document does not exist");
     }
   };
 
   return (
-    <main className="w-screen p-24">
+    <main className="w-screen flex flex-col py-32 items-center">
       <h2 className="mb-2 text-lg font-semibold text-gray-900 text-black ">
         Car history:
       </h2>
       {carData ? (
         <ul className="max-w-md space-y-1 text-slate-900 list-disc list-inside ">
           <li>Name: {carData.name}</li>
-          <li>From: {carData.from}</li>
-          <li>To : {carData.to}</li>
+          <li>Date: {carData.date}</li>
         </ul>
       ) : (
         <p>Client does not exist</p>
       )}
-      {carImages.map((e) => (
-        <Image key={v4()} src={e} width={500} height={500} alt="" />
-      ))}
+      <div className="w-screen flex flex-col items-center my-12">
+        {carData &&
+          carData.imagesArray.map((e) => (
+            <img className="my-10 w-10/12" key={v4()} src={e} alt="" />
+          ))}
+      </div>
     </main>
   );
 };
