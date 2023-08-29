@@ -22,10 +22,10 @@ const Car = () => {
   };
 
   return (
-    <main className="flex flex-col justify-evenly items-center w-screen h-screen">
-      <div className="w-11/12 lg:w-9/12 h-2/5 flex flex-col">
-        <h1 className="m-3 text-lg font-semibold">Car History</h1>
-        <div className="flex">
+    <main className="flex flex-col justify-evenly items-center w-screen ">
+      <div className="w-11/12 lg:w-9/12 mt-10 flex flex-col">
+        <h1 className="my-5 text-lg font-semibold">Car History:</h1>
+        <div className="flex flex-col">
           {carHitroy &&
             carHitroy.map((card) => (
               <Clientcard
