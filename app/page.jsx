@@ -1,15 +1,34 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoading(false);
+      } else {
+        router.push("/login");
+      }
+    });
+  }, []);
+
+  return <>{!loading && <MainPage />}</>;
+}
+
+const MainPage = () => {
   const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     router.push(`/${e.target[0].value}`);
   };
-
   return (
     <main className="flex justify-center items-center h-screen w-screen">
       <form className="w-11/12 lg:w-9/12" onSubmit={handleSubmit}>
@@ -48,4 +67,4 @@ export default function Home() {
       </form>
     </main>
   );
-}
+};
